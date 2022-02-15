@@ -365,11 +365,6 @@ static struct notification *dbus_message_to_notification(const gchar *sender, GV
         }
 
         GVariant *dict_value;
-        if ((dict_value = g_variant_lookup_value(hints, "urgency", G_VARIANT_TYPE_BYTE))) {
-                n->urgency = g_variant_get_byte(dict_value);
-                g_variant_unref(dict_value);
-        }
-
         if ((dict_value = g_variant_lookup_value(hints, "category", G_VARIANT_TYPE_STRING))) {
                 n->category = g_variant_dup_string(dict_value, NULL);
                 g_variant_unref(dict_value);
