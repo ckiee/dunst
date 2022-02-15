@@ -370,21 +370,6 @@ static struct notification *dbus_message_to_notification(const gchar *sender, GV
                 g_variant_unref(dict_value);
         }
 
-        if ((dict_value = g_variant_lookup_value(hints, "fgcolor", G_VARIANT_TYPE_STRING))) {
-                n->colors.fg = g_variant_dup_string(dict_value, NULL);
-                g_variant_unref(dict_value);
-        }
-
-        if ((dict_value = g_variant_lookup_value(hints, "bgcolor", G_VARIANT_TYPE_STRING))) {
-                n->colors.bg = g_variant_dup_string(dict_value, NULL);
-                g_variant_unref(dict_value);
-        }
-
-        if ((dict_value = g_variant_lookup_value(hints, "frcolor", G_VARIANT_TYPE_STRING))) {
-                n->colors.frame = g_variant_dup_string(dict_value, NULL);
-                g_variant_unref(dict_value);
-        }
-
         if ((dict_value = g_variant_lookup_value(hints, "category", G_VARIANT_TYPE_STRING))) {
                 n->category = g_variant_dup_string(dict_value, NULL);
                 g_variant_unref(dict_value);
