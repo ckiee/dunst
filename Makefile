@@ -68,7 +68,7 @@ DEPS := ${SRC:.c=.d} ${TEST_SRC:.c=.d}
 
 
 .PHONY: all debug
-all: doc dunst dunstify service
+all: doc dunst service
 
 debug: CFLAGS   += ${CPPFLAGS_DEBUG} ${CFLAGS_DEBUG}
 debug: LDFLAGS  += ${LDFLAGS_DEBUG}
@@ -84,9 +84,6 @@ ${OBJ} ${TEST_OBJ}: Makefile config.mk
 
 dunst: ${OBJ} main.o
 	${CC} -o ${@} ${OBJ} main.o ${CFLAGS} ${LDFLAGS}
-
-dunstify: dunstify.o
-	${CC} -o ${@} dunstify.o ${CFLAGS} ${LDFLAGS}
 
 .PHONY: test test-valgrind test-coverage
 test: test/test clean-coverage-run
@@ -160,18 +157,13 @@ wayland-protocols: src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
 	wayland-scanner private-code src/wayland/protocols/idle.xml src/wayland/protocols/idle.h
 endif
 
-.PHONY: clean clean-dunst clean-dunstify clean-doc clean-tests clean-coverage clean-coverage-run clean-wayland-protocols
-clean: clean-dunst clean-dunstify clean-doc clean-tests clean-coverage clean-coverage-run
+.PHONY: clean clean-dunst clean-doc clean-tests clean-coverage clean-coverage-run clean-wayland-protocols
+clean: clean-dunst clean-doc clean-tests clean-coverage clean-coverage-run
 
 clean-dunst:
 	rm -f dunst ${OBJ} main.o main.d ${DEPS}
 	rm -f org.knopwob.dunst.service
 	rm -f dunst.systemd.service
-
-clean-dunstify:
-	rm -f dunstify.o
-	rm -f dunstify.d
-	rm -f dunstify
 
 clean-doc:
 	rm -f docs/dunst.1
@@ -197,7 +189,7 @@ clean-wayland-protocols:
         install-service install-service-dbus install-service-systemd \
         uninstall uninstall-dunstctl \
         uninstall-service uninstall-service-dbus uninstall-service-systemd
-install: install-dunst install-dunstctl install-doc install-service install-dunstify
+install: install-dunst install-dunstctl install-doc install-service
 
 install-dunst: dunst doc
 	install -Dm755 dunst ${DESTDIR}${BINDIR}/dunst
@@ -220,12 +212,8 @@ install-service-systemd: service-systemd
 	install -Dm644 dunst.systemd.service ${DESTDIR}${SERVICEDIR_SYSTEMD}/dunst.service
 endif
 
-install-dunstify: dunstify
-	install -Dm755 dunstify ${DESTDIR}${BINDIR}/dunstify
-
 uninstall: uninstall-service uninstall-dunstctl
 	rm -f ${DESTDIR}${BINDIR}/dunst
-	rm -f ${DESTDIR}${BINDIR}/dunstify
 	rm -f ${DESTDIR}${MANPREFIX}/man1/dunst.1
 	rm -f ${DESTDIR}${MANPREFIX}/man5/dunst.5
 	rm -f ${DESTDIR}${MANPREFIX}/man1/dunstctl.1
